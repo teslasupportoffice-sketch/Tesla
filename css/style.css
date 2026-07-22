@@ -76,13 +76,15 @@ body {
   user-select: none;
 }
 
-.tesla-logo {
+.tesla-logo-img {
   height: 22px;
   width: auto;
+  display: block;
+  object-fit: contain;
   transition: transform 0.2s ease;
 }
 
-.logo-wrapper:active .tesla-logo {
+.logo-wrapper:active .tesla-logo-img {
   transform: scale(0.92);
 }
 
