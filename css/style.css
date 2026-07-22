@@ -1,1 +1,631 @@
-style
+/* ==========================================================================
+   1. CORE DESIGN TOKENS & RESET
+   ========================================================================== */
+:root {
+  --tesla-red: #e82127;
+  --tesla-red-hover: #c4181d;
+  --glass-bg: rgba(255, 255, 255, 0.12);
+  --glass-bg-hover: rgba(255, 255, 255, 0.22);
+  --glass-card-bg: rgba(255, 255, 255, 0.18);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+  --glass-border-red: 1px solid rgba(232, 33, 39, 0.4);
+  --glass-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.75);
+  --text-dark: #111111;
+  --blur-radius: 18px;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: radial-gradient(circle at 15% 15%, #e82127 0%, #1a0003 45%, #050505 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.glass-bg-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 85% 85%, rgba(232, 33, 39, 0.25), transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ==========================================================================
+   2. GLASS HEADER & NAVIGATION
+   ========================================================================== */
+.glass-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15, 15, 20, 0.45);
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
+  border-bottom: var(--glass-border);
+  padding: 16px 24px;
+}
+
+.header-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-wrapper {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+
+.tesla-logo {
+  height: 22px;
+  width: auto;
+  transition: transform 0.2s ease;
+}
+
+.logo-wrapper:active .tesla-logo {
+  transform: scale(0.92);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+}
+
+.nav-link {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.nav-link.active, .nav-link:hover {
+  color: var(--text-primary);
+}
+
+.back-link {
+  color: var(--text-primary);
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   3. HERO & CONTAINERS
+   ========================================================================== */
+.hero-section {
+  padding: 60px 20px 40px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.glass-card-hero {
+  max-width: 800px;
+  padding: 40px;
+  border-radius: var(--radius-lg);
+  background: var(--glass-card-bg);
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+.hero-badge {
+  display: inline-block;
+  background: var(--tesla-red);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.glass-card-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+
+.glass-card-hero p {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+.main-container {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px 20px 80px;
+  flex: 1;
+}
+
+.section-title {
+  margin-bottom: 30px;
+}
+
+.section-title h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.title-line {
+  height: 4px;
+  width: 60px;
+  background: var(--tesla-red);
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   4. SHOWROOM GRID (3 PER ROW DESKTOP, 1 MOBILE)
+   ========================================================================== */
+.car-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+@media (max-width: 992px) {
+  .car-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .car-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Glass Car Card */
+.glass-card {
+  background: var(--glass-card-bg);
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px);
+  border: var(--glass-border-red);
+}
+
+.card-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.glass-card:hover .card-img {
+  transform: scale(1.05);
+}
+
+.discount-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--tesla-red);
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.card-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.car-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.original-price.strikethrough {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.final-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.spec-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.spec-item .val {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.spec-item .lbl {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   5. GLASS BUTTONS & INPUTS
+   ========================================================================== */
+.glass-btn {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: var(--radius-md);
+  border: var(--glass-border);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  text-decoration: none;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.btn-primary {
+  background: var(--tesla-red);
+  border: 1px solid var(--tesla-red);
+}
+
+.btn-primary:hover {
+  background: var(--tesla-red-hover);
+}
+
+.btn-secondary {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.btn-whatsapp {
+  background: #25d366;
+  border-color: #25d366;
+  color: #fff;
+}
+
+.btn-telegram {
+  background: #0088cc;
+  border-color: #0088cc;
+  color: #fff;
+}
+
+.btn-small {
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  width: auto;
+}
+
+.glass-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: var(--glass-border);
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.glass-input:focus {
+  border-color: var(--tesla-red);
+}
+
+/* ==========================================================================
+   6. CAR DETAILS PAGE & GALLERY
+   ========================================================================== */
+.glass-card-large {
+  background: var(--glass-card-bg);
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 32px;
+  box-shadow: var(--glass-shadow);
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 36px;
+}
+
+@media (max-width: 850px) {
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.main-view-img {
+  width: 100%;
+  height: 380px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: var(--glass-border);
+}
+
+.gallery-thumbs {
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+  overflow-x: auto;
+}
+
+.thumb-img {
+  width: 76px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0.6;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.thumb-img.active, .thumb-img:hover {
+  opacity: 1;
+  border-color: var(--tesla-red);
+}
+
+.order-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+/* ==========================================================================
+   7. FLOATING QUICK SUPPORT WIDGET
+   ========================================================================== */
+.floating-support-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+}
+
+.support-fab {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--tesla-red);
+  color: #fff;
+  border: none;
+  font-size: 1.4rem;
+  box-shadow: 0 8px 24px rgba(232, 33, 39, 0.5);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.support-fab:hover {
+  transform: scale(1.08);
+}
+
+.support-menu {
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  width: 200px;
+  padding: 10px;
+  border-radius: var(--radius-md);
+  background: rgba(20, 20, 25, 0.85);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.support-menu.show {
+  display: flex;
+}
+
+.support-item {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background 0.2s;
+}
+
+.support-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   8. ADMIN & AUTHENTICATION STYLES
+   ========================================================================== */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 32px;
+  text-align: center;
+}
+
+.auth-card h2 {
+  margin: 16px 0 6px;
+}
+
+.auth-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-secondary);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.admin-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 28px;
+}
+
+@media (max-width: 900px) {
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.glass-panel {
+  background: var(--glass-card-bg);
+  -webkit-backdrop-filter: blur(var(--blur-radius));
+  backdrop-filter: blur(var(--blur-radius));
+  border: var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.inventory-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.inventory-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inventory-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.inventory-thumb {
+  width: 50px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.error-msg {
+  color: #ff4d4d;
+  font-size: 0.85rem;
+  margin-top: 10px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.glass-footer {
+  text-align: center;
+  padding: 24px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  border-top: var(--glass-border);
+}
