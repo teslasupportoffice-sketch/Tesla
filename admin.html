@@ -1,1 +1,129 @@
-admin 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesla | Admin Portal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Glass Background -->
+  <div class="glass-bg-canvas"></div>
+
+  <!-- Admin Login Overlay Modal -->
+  <div class="auth-overlay" id="authModal">
+    <div class="glass-card auth-card">
+      <div class="logo-wrapper text-center">
+        <svg class="tesla-logo" viewBox="0 0 342 35" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#e82127" d="M0 .1a9.7 9.7 0 0 0 7 7h11l-3 19h10l3-19h11a9.7 9.7 0 0 0 7-7H0zm55 0a9.7 9.7 0 0 0 7 7h10v5H58a9.7 9.7 0 0 0-7 7v7h28v-7H68v-5h12a9.7 9.7 0 0 0 7-7V.1H55zm46 0a9.7 9.7 0 0 0 7 7h10l-3 19h10l3-19h11a9.7 9.7 0 0 0 7-7H101zm55 0a9.7 9.7 0 0 0 7 7h11v12h10V7h11a9.7 9.7 0 0 0 7-7h-46zm55 0a9.7 9.7 0 0 0 7 7h10v5h-14a9.7 9.7 0 0 0-7 7v7h28V.1h-24z"/>
+        </svg>
+      </div>
+      <h2>Secret Admin Portal</h2>
+      <p>Enter credentials to access inventory controls.</p>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="adminEmail">Email</label>
+          <input type="email" id="adminEmail" class="glass-input" placeholder="teslasupportoffice@gmail.com" required>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" class="glass-input" placeholder="Tesla2026" required>
+        </div>
+        <button type="submit" class="glass-btn btn-primary">Unlock Dashboard</button>
+      </form>
+      <p id="loginError" class="error-msg"></p>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard Workspace (Hidden until logged in) -->
+  <div class="dashboard-container hidden" id="adminDashboard">
+    
+    <header class="glass-header">
+      <div class="header-container">
+        <h2>Tesla Showroom Management</h2>
+        <div class="admin-actions">
+          <a href="index.html" class="nav-link">View Showroom</a>
+          <button id="logoutBtn" class="glass-btn btn-small">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-container admin-layout">
+      
+      <!-- Create / Edit Car Form -->
+      <section class="glass-panel form-section">
+        <h3 id="formTitle">Add New Vehicle</h3>
+        
+        <form id="carForm">
+          <input type="hidden" id="carId"> <!-- Used when editing -->
+
+          <div class="form-group">
+            <label for="carName">Vehicle Name / Model</label>
+            <input type="text" id="carName" class="glass-input" placeholder="e.g. Model S Plaid" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="carPrice">Price ($ USD)</label>
+              <input type="number" id="carPrice" class="glass-input" placeholder="89990" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="carDiscount">Discount % (Optional)</label>
+              <input type="number" id="carDiscount" class="glass-input" placeholder="e.g. 30" min="0" max="100">
+            </div>
+          </div>
+
+          <!-- Specifications Row -->
+          <div class="form-row">
+            <div class="form-group">
+              <label for="carAcceleration">0–60 mph</label>
+              <input type="text" id="carAcceleration" class="glass-input" placeholder="1.99s" required>
+            </div>
+            <div class="form-group">
+              <label for="carRange">Range</label>
+              <input type="text" id="carRange" class="glass-input" placeholder="396 mi" required>
+            </div>
+            <div class="form-group">
+              <label for="carTopSpeed">Top Speed</label>
+              <input type="text" id="carTopSpeed" class="glass-input" placeholder="200 mph" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="carDescription">Description</label>
+            <textarea id="carDescription" class="glass-input" rows="3" placeholder="Key highlights and specs..."></textarea>
+          </div>
+
+          <!-- Up to 5 Images Upload -->
+          <div class="form-group">
+            <label for="carImages">Vehicle Images (1 to 5 Photos)</label>
+            <input type="file" id="carImages" class="glass-input" accept="image/*" multiple>
+            <small class="help-text">You can select up to 5 photos. They will upload to ImgBB automatically.</small>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="glass-btn btn-primary" id="saveCarBtn">Save Vehicle</button>
+            <button type="button" class="glass-btn btn-secondary hidden" id="cancelEditBtn">Cancel Edit</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Active Vehicles Inventory Table/List -->
+      <section class="glass-panel inventory-section">
+        <h3>Current Inventory</h3>
+        <div id="inventoryList" class="inventory-grid">
+          <!-- Dynamically populated via admin.js -->
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+
+</body>
+</html>
