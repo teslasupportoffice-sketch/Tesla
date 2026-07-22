@@ -1,13 +1,26 @@
-// js/admin.js
 import { db, auth } from "./firebase.js";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+import { 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged 
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import { 
+  collection, 
+  addDoc, 
+  updateDoc, 
+  deleteDoc, 
+  doc, 
+  onSnapshot 
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
-// !!! YOUR IMGBB API KEY HERE !!!
-const IMGBB_API_KEY = "f4157646812b48374f76446c8b89a547";
+// ==========================================================================
+// CLOUDINARY CONFIGURATION
+// ==========================================================================
+const CLOUDINARY_CLOUD_NAME = "ysaennr0";
+const CLOUDINARY_PRESET = "tesla_preset";
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Elements
+  // DOM Elements
   const authModal = document.getElementById("authModal");
   const loginForm = document.getElementById("loginForm");
   const loginError = document.getElementById("loginError");
@@ -30,7 +43,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const formTitle = document.getElementById("formTitle");
   const inventoryList = document.getElementById("inventoryList");
 
-  // --- 1. Authentication State Listener ---
+  // ==========================================================================
+  // 1. AUTHENTICATION STATE LISTENER
+  // ==========================================================================
   onAuthStateChanged(auth, (user) => {
     if (user) {
       authModal.classList.add("hidden");
@@ -42,55 +57,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Admin Login
+  // Admin Sign-In Handler
   loginForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     loginError.textContent = "";
     try {
-      await signInWithEmailAndPassword(auth, document.getElementById("adminEmail").value, document.getElementById("adminPassword").value);
+      await signInWithEmailAndPassword(
+        auth, 
+        document.getElementById("adminEmail").value, 
+        document.getElementById("adminPassword").value
+      );
     } catch (err) {
       loginError.textContent = "Invalid login credentials.";
     }
   });
 
-  // Admin Logout
+  // Admin Sign-Out Handler
   logoutBtn.addEventListener("click", () => signOut(auth));
 
-  // --- 2. Upload Images to ImgBB ---
-  async function uploadFilesToImgBB(files) {
+  // ==========================================================================
+  // 2. CLOUDINARY IMAGE UPLOAD FUNCTION
+  // ==========================================================================
+  async function uploadFilesToCloudinary(files) {
     const urls = [];
-    const filesToUpload = Array.from(files).slice(0, 5); // Limit max 5 files
+    const filesToUpload = Array.from(files).slice(0, 5); // Limit max 5 photos
 
     for (const file of filesToUpload) {
       const formData = new FormData();
-      formData.append("image", file);
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_PRESET);
 
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, {
         method: "POST",
         body: formData
       });
+
       const data = await res.json();
-      if (data.success) {
-        urls.push(data.data.url);
+      if (data.secure_url) {
+        urls.push(data.secure_url);
       } else {
-        throw new Error("ImgBB upload failed: " + data.error.message);
+        throw new Error("Cloudinary upload failed: " + (data.error ? data.error.message : "Unknown error"));
       }
     }
     return urls;
   }
 
-  // --- 3. Save / Update Vehicle ---
+  // ==========================================================================
+  // 3. CREATE / UPDATE VEHICLE IN FIRESTORE
+  // ==========================================================================
   carForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     saveCarBtn.disabled = true;
-    saveCarBtn.textContent = "Processing...";
+    saveCarBtn.textContent = "Uploading & Saving...";
 
     try {
       let imageUrls = [];
       
-      // Upload new images if selected
+      // Upload images if new ones are selected
       if (carImagesInput.files.length > 0) {
-        imageUrls = await uploadFilesToImgBB(carImagesInput.files);
+        imageUrls = await uploadFilesToCloudinary(carImagesInput.files);
       }
 
       const carData = {
@@ -107,13 +132,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const existingId = carIdInput.value;
 
       if (existingId) {
-        // UPDATE existing car
+        // UPDATE existing car record
         if (imageUrls.length > 0) {
-          carData.images = imageUrls; // Only overwrite images if new ones were chosen
+          carData.images = imageUrls; // Only overwrite photos if new ones were uploaded
         }
         await updateDoc(doc(db, "cars", existingId), carData);
       } else {
-        // CREATE new car
+        // CREATE new car record
         carData.images = imageUrls;
         carData.createdAt = new Date();
         await addDoc(collection(db, "cars"), carData);
@@ -128,11 +153,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // --- 4. Listen & Render Inventory List ---
+  // ==========================================================================
+  // 4. REAL-TIME INVENTORY LISTENER
+  // ==========================================================================
   function listenToInventory() {
     onSnapshot(collection(db, "cars"), (snapshot) => {
       inventoryList.innerHTML = "";
       
+      if (snapshot.empty) {
+        inventoryList.innerHTML = `<p style="color:var(--text-secondary);">No vehicles in inventory.</p>`;
+        return;
+      }
+
       snapshot.docs.forEach((docSnap) => {
         const car = docSnap.data();
         const id = docSnap.id;
@@ -142,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         item.className = "inventory-item";
         item.innerHTML = `
           <div class="inventory-info">
-            <img src="${thumb}" class="inventory-thumb" alt="">
+            <img src="${thumb}" class="inventory-thumb" alt="${car.name}">
             <div>
               <strong>${car.name}</strong><br>
               <small style="color:var(--text-secondary);">$${Number(car.price).toLocaleString()} ${car.discountPercent ? `(${car.discountPercent}% OFF)` : ''}</small>
@@ -158,10 +190,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- 5. Edit and Delete Handlers ---
+  // ==========================================================================
+  // 5. EDIT & DELETE HANDLERS
+  // ==========================================================================
   window.editCar = async (id) => {
-    const docSnap = await doc(db, "cars", id);
-    // Fetch snapshot or read directly
+    const docSnap = doc(db, "cars", id);
     onSnapshot(docSnap, (s) => {
       if (!s.exists()) return;
       const car = s.data();
@@ -180,7 +213,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   window.deleteCar = async (id) => {
-    if (confirm("Are you sure you want to remove this vehicle from the database?")) {
+    if (confirm("Are you sure you want to remove this vehicle from inventory?")) {
       await deleteDoc(doc(db, "cars", id));
     }
   };
