@@ -1,1 +1,84 @@
-index
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tesla | Glass Showroom</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- Ambient Dynamic Glass Background Overlay -->
+  <div class="glass-bg-canvas"></div>
+
+  <!-- Glass Header & Navigation -->
+  <header class="glass-header">
+    <div class="header-container">
+      
+      <!-- Tesla Logo with Secret 5-Tap Listener -->
+      <div class="logo-wrapper" id="teslaLogoBtn" title="Tesla Showroom">
+        <svg class="tesla-logo" viewBox="0 0 342 35" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#e82127" d="M0 .1a9.7 9.7 0 0 0 7 7h11l-3 19h10l3-19h11a9.7 9.7 0 0 0 7-7H0zm55 0a9.7 9.7 0 0 0 7 7h10v5H58a9.7 9.7 0 0 0-7 7v7h28v-7H68v-5h12a9.7 9.7 0 0 0 7-7V.1H55zm46 0a9.7 9.7 0 0 0 7 7h10l-3 19h10l3-19h11a9.7 9.7 0 0 0 7-7H101zm55 0a9.7 9.7 0 0 0 7 7h11v12h10V7h11a9.7 9.7 0 0 0 7-7h-46zm55 0a9.7 9.7 0 0 0 7 7h10v5h-14a9.7 9.7 0 0 0-7 7v7h28V.1h-24z"/>
+        </svg>
+      </div>
+
+      <nav class="nav-links">
+        <a href="#showroom" class="nav-link active">Vehicles</a>
+        <a href="#about" class="nav-link">About</a>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="hero-section">
+    <div class="hero-content glass-card-hero">
+      <span class="hero-badge">The Future of Mobility</span>
+      <h1>Experience Tesla Electric Performance</h1>
+      <p>Explore custom specs, order direct via Telegram or WhatsApp, or build your dream drive.</p>
+    </div>
+  </section>
+
+  <!-- Vehicle Catalog Section -->
+  <main class="main-container" id="showroom">
+    <div class="section-title">
+      <h2>Active Showroom Models</h2>
+      <div class="title-line"></div>
+    </div>
+
+    <!-- Responsive Car Grid (3 per row on desktop, 1 on mobile) -->
+    <div class="car-grid" id="carGrid">
+      <!-- Loading Skeleton Cards -->
+      <div class="glass-card skeleton"></div>
+      <div class="glass-card skeleton"></div>
+      <div class="glass-card skeleton"></div>
+    </div>
+  </main>
+
+  <!-- Floating Quick Support Action Button -->
+  <div class="floating-support-container">
+    <button class="support-fab" id="supportFab" aria-label="Support Options">
+      <i class="fa-solid fa-headset"></i>
+    </button>
+
+    <div class="support-menu glass-panel" id="supportMenu">
+      <a href="https://t.me/YourTelegramSupportHandle" target="_blank" class="support-item telegram">
+        <i class="fa-brands fa-telegram"></i> Telegram Support
+      </a>
+      <a href="mailto:support@teslashowroom.com" class="support-item email">
+        <i class="fa-solid fa-envelope"></i> Email Support
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="glass-footer">
+    <p>&copy; Tesla Glass Showroom. Powered by Firebase & ImgBB.</p>
+  </footer>
+
+  <!-- Main JavaScript App Module -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
