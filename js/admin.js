@@ -4,7 +4,7 @@ import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https:/
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
 
 // !!! YOUR IMGBB API KEY HERE !!!
-const IMGBB_API_KEY = "c7daa0cf495bd162692e584a6322e9ec";
+const IMGBB_API_KEY = "f4157646812b48374f76446c8b89a547";
 
 document.addEventListener("DOMContentLoaded", () => {
   // Elements
